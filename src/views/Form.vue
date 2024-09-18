@@ -34,6 +34,19 @@
       >
       </b-form-textarea>
     </b-form-group>
+
+    <b-form-group
+      label="Status"
+      label-for="status"
+      >
+      <b-form-select
+      id="status"
+      v-model="form.status"
+      :options="optinsList"
+      >
+      </b-form-select>
+    </b-form-group>
+
         <b-button type="submit" 
         variant="outline-primary"
          @click="saveTask"
@@ -46,6 +59,8 @@
   <script>
     import toastMixin from '@/Mixins/toastMixin';
     import { required, minLength } from 'vuelidate/lib/validators';
+    import TasksModel from '@/Models/TasksModel';
+    import Status from '@/valueObjects/status';
 
     export default{
         name:"Form",
@@ -56,10 +71,17 @@
         return {
             form:{
                 subject:"",
-                description:""
+                description:"",
+                status: Status.OPEN
             },
 
-            methodSave: "new"
+            methodSave: "new",
+            optinsList:[
+                {value: Status.OPEN,text: "Aberto"},
+                {value: Status.FINISHED,text: "Concluído"},
+                {value: Status.ARQUIVED,text: "Arquivado"}
+    
+            ]
         }
     },
 
@@ -73,29 +95,24 @@
          
         }
     },
-    created() {
-        if(this.$route.params.index === 0 || this.$route.params.index !==  undefined) {
+    async created() {
+        if(this.$route.params.taskId) {
             this.methodSave = "update";
-            let tasks = JSON.parse(localStorage.getItem("tasks"));
-            this.form = tasks[ this.$route.params.index ];
+            this.form = await TasksModel.find(this.$route.params.taskId);
         }
     }, 
 
     methods:{
         saveTask(){
             if(this.methodSave === "update" ){
-                let tasks = JSON.parse(localStorage.getItem("tasks"));
-                tasks[this.$route.params.index] = this.form;
-                  localStorage.setItem('tasks', JSON.stringify(tasks));
+                  this.form.save();
                   this.showToast("Success", "Sucesso", "Tarefa atualizada com sucesso!" )
                   this.$router.push({name: "list"});
                   return;
             }
+                    const task = new TasksModel(this.form);
+                     task.save();
 
-        let tasks = (localStorage.getItem('tasks')) 
-        ? JSON.parse(localStorage.getItem('tasks')) :[];
-        tasks.push(this.form);
-        localStorage.setItem('tasks', JSON.stringify(tasks));
         this.showToast("Success", "Sucesso", "Tarefa criada com sucesso!" )
         this.$router.push({name: "list"});
         }
