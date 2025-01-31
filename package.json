@@ -1,0 +1,31 @@
+{
+  "name": "aulatdlist",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "backend": "json-server --watch db.json"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "bootstrap-vue": "^2.23.1",
+    "core-js": "^3.8.3",
+    "json-server": "^1.0.0-beta.2",
+    "vue": "^2.6.14",
+    "vue-api-query": "^1.11.0",
+    "vue-router": "^3.5.1",
+    "vuelidate": "^0.7.7"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "vue-template-compiler": "^2.6.14"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
